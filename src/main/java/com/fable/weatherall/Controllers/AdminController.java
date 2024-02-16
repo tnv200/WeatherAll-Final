@@ -192,7 +192,7 @@ public class AdminController {
 			        model.addAttribute("user1", user1);
 			        model.addAttribute("user2", user2);
 
-			        return "/pages-profile"; 
+			        return "pages-profile"; 
 			    }
 
 		      @GetMapping("/getUsers")
