@@ -47,7 +47,7 @@ public class SecurityConfig {
 	        	.requestMatchers("/Homepage/**","/Signup/**","/Login/**").permitAll()
 	        		
 	        	
-	        	.requestMatchers("/admin/view_adminprofile","/admin/update_admin").hasAuthority("admin")
+	        	.requestMatchers("/admin/view_adminprofile","/admin/update_admin","/pages-profile").hasAuthority("admin")
 	        	.requestMatchers("/admin/getUsers","/admin/getAllfood","/admin/getClothItems","/admin/getOutActs","/admin/getTrNms").hasAuthority("admin")
         	
 	            .requestMatchers("/user_dash","/admin/api/wapiobj").hasAuthority("user")
