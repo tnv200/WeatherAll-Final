@@ -838,6 +838,36 @@ span.close1 {
     });
 </script>
 
+<script>
+    function displayErrorMessages() {
+        var urlParams = new URLSearchParams(window.location.search);
+        
+        var errorMessage = urlParams.get('error');
+        if (errorMessage) {
+            alert(decodeURIComponent(errorMessage));
+        }
+        
+        var errorMessage1 = urlParams.get('errorid');
+        if (errorMessage1) {
+            alert(decodeURIComponent(errorMessage1));
+        }
+        
+        var errorMessage2 = urlParams.get('errorid-1');
+        if (errorMessage2) {
+            alert(decodeURIComponent(errorMessage2));
+        }
+        
+         var errorMessage3 = urlParams.get('error4');
+        if (errorMessage3) {
+            alert(decodeURIComponent(errorMessage3));
+        }
+    }
+
+    // Call the function when the page loads
+    window.onload = displayErrorMessages;
+</script>
+
+
 </body>
 
 </html>

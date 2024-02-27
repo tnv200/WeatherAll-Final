@@ -30,7 +30,7 @@ public class CustomUserDetail implements UserDetails {
 		// TODO Auto-generated method stub
 		return List.of(() -> user.getUserType());
 	}
-
+	
 	@Override
 	public String getUsername() {
 		// TODO Auto-generated method stub
@@ -42,6 +42,11 @@ public class CustomUserDetail implements UserDetails {
 		return user.getPassword();
 	}	
 
+	public int getUserid() {
+		// TODO Auto-generated method stub
+		return user.getUserid();
+	}
+	
 	public String getEmail() {
 		// TODO Auto-generated method stub
 		return user.getEmail();

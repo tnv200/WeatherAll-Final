@@ -259,15 +259,15 @@
                                     <h4 class="card-title mt-2" ></h4>
                                     <h6 class="card-subtitle">Admin  </h6>
                                     <div class="row text-center justify-content-md-center">
-                                        <!--<div class="col-4"><a href="javascript:void(0)" class="link"><i
+                                        <!-- <div class="col-4"><a href="javascript:void(0)" class="link"><i
                                                     class="fa fa-user"></i>
                                                 <font class="font-medium">254</font>
                                             </a></div>
                                         <div class="col-4"><a href="javascript:void(0)" class="link"><i
                                                     class="fa fa-camera"></i>
                                                 <font class="font-medium">54</font>
-                                            </a></div>
-                                    </div>-->
+                                            </a></div> -->
+                                    </div>
                                 </center>
                             </div>
                         </div>
@@ -280,14 +280,14 @@
                             <div class="card-body">
 								
 								
-                                <form  th:action="@{/admin/update_admin}" th:object="${update}" th:method="post" class="form-horizontal form-material mx-2">
+                                <form  th:action="@{/admin/update_admin}" th:object="${update}" th:method="post" class="form-horizontal form-material mx-2"  onsubmit="return validateForm()">
                                     <div class="form-group">
                                         <label class="col-md-12">Full Name</label>
                                         
                                         <div class="col-md-12">
-											
+                                        
                                             <input type="text" class="form-control" placeholder="enter Name" value="" name="username"
-                                         th:value="${user2 != null and user2.size() > 0 ? user2[0]: ''}" >
+                                            th:value="${name}" >
                                          
                                         </div>
   
@@ -296,18 +296,9 @@
                                     <div class="form-group">
                                     
                                         <label for="example-email" class="col-md-12">Email</label>
-                                        <!-- 
-                                        <div class="d-flex flex-column align-items-center text-center p-3 py-5" th:each="userDetail : ${user}">
-                                                   
-                                                     <span class="font-weight-bold"></span>
-                                                      <span class="text-black-50" th:text="${userDetail.id}"></span>
-                                                     <span class="font-weight-bold"></span>
-                                                      <span class="text-black-50" th:text="${userDetail.email}"></span>
-                                        </div> -->
-                                        
                                         
                                         <input type="text" class="form-control" placeholder="enter email id" value="" name="email"
-                                         th:value="${user1 != null and user1.size() > 0 ? user1[0].email : ''}" >
+                                         th:value="${email}" >
                                         
                                     </div>
                                     
@@ -407,7 +398,50 @@
             window.location.href = '/logout';
         });
     });
+    
+     function validateForm() {
+        var username = document.getElementsByName("username")[0].value;
+        var email = document.getElementsByName("email")[0].value;
+
+        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        var firstFourCharactersRegex = /^[A-Za-z]{4}/;
+
+        // Validate email
+        if (!emailRegex.test(email)) {
+            alert("Invalid Email");
+            return false; // Prevent form submission
+        }
+
+        // Validate username
+        if (!firstFourCharactersRegex.test(username)) {
+            alert("First 4 characters of fullname should be alphabets");
+            return false; // Prevent form submission
+        }
+  return true;
+}
+
+function checkEmailExists(email) {
+
+    $.ajax({
+        url: '/check-email',
+        type: 'POST',
+        data: {email: email},
+        success: function(response) {
+            if (response) {
+                alert("Email already exists");
+            } else {
+                // If email doesn't exist, allow form submission
+                document.getElementsByName("email")[0].value = email;
+                document.querySelector("form").submit();
+            }
+        },
+        error: function() {
+            alert("Error checking email existence. Please try again.");
+        }
+    });
+}
 </script>
+
 </body>
 
 </html>

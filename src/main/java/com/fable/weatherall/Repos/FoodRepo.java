@@ -16,6 +16,10 @@ import com.fable.weatherall.FoodEntites.FoodTemperatureMap;
 @EnableJpaRepositories
 @Repository
 public interface FoodRepo extends JpaRepository<Food, Integer> {
+	
+	Food findByFoodName(String fname);
+	
+	Food findByFoodId(int id);
 
     @Query("SELECT tc.categoryId " +
            "FROM TemperatureCategory tc " +

@@ -3,6 +3,7 @@ package com.fable.weatherall.Controllers;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.fable.weatherall.Admin_User_Entities.ApiKeyUrl;
 import com.fable.weatherall.Admin_User_Entities.User;
@@ -157,10 +159,21 @@ public class AdminController {
 
 		    @PostMapping("/update_admin")
 		    public String updateAdminprofile(@ModelAttribute("update") User update) {
-		            
-	            adminService.update_Admin(update);
-		            
-		        return "redirect:/admin/view_adminprofile"; 
+		        
+		    	 Optional<User> existingUser = userRepo.findOptionalByEmail(update.getEmail());
+		    	    if (existingUser.isPresent()) {
+		    	        // User with the provided email already exists
+		    	        // You can handle this case here, such as showing an error message or performing some other action
+		    	    	
+		    	        return "redirect:/admin/view_adminprofile"; // Redirect to a suitable page
+		    	    }
+
+		    	    // Proceed with updating the admin profile
+		    	System.out.println("Ok");
+		    	    adminService.update_Admin(update);
+		    	    
+		    	    return "redirect:/admin/view_adminprofile";
+	          
 		    }
 
 		    @PostMapping("/u_add")
@@ -178,19 +191,11 @@ public class AdminController {
 				
 				 CustomUserDetail user = (CustomUserDetail) session.getAttribute("user");
 				 
-					String email = user.getEmail();
+					String email = userRepo.findEmailById(user.getUserid());
 					String name = userRepo.findUsernameByEmail(email);
 					
-			    	User us = userRepo.findByEmail(email);
-   
-			    	List<User> user1 = new ArrayList<>();
-			    	List<String> user2 = new ArrayList<>();
-			    	
-			    	user1.add(us);
-			    	user2.add(name);
-
-			        model.addAttribute("user1", user1);
-			        model.addAttribute("user2", user2);
+			        model.addAttribute("name", name);
+			        model.addAttribute("email", email);
 
 			        return "pages-profile"; 
 			    }
@@ -227,29 +232,61 @@ public class AdminController {
     }
 	 
 	 @PostMapping("/addFoods")
-	 public String addFoods(@ModelAttribute("foodAdd") Food food) 
-	 
-	 {
-		 foodrepo.save(food);
-		 
-		 return "redirect:/admin/getAllfood";
+	 public String addFoods(@ModelAttribute("foodAdd") Food food,  RedirectAttributes redirectAttributes) {
+	     
+		 Food existingFood = foodrepo.findByFoodName(food.getFoodName());
+
+		    if (existingFood != null) {
+		    	
+		        redirectAttributes.addAttribute("error", "Food item already exists with Foodid: " + existingFood.getFoodId());
+		        return "redirect:/admin/getAllfood";
+		    }
+	     
+	     foodrepo.save(food);
+	     return "redirect:/admin/getAllfood";
 	 }
- 
+
 	 @PostMapping("/deleteFoods")
-	 public String deleteFoods(  @RequestParam("foodId") int foodId ) {
+	 public String deleteFoods(  @RequestParam("foodId") int foodId,  RedirectAttributes redirectAttributes ) {
+		 
+		 
+		 Food existingFood = foodrepo.findByFoodId(foodId);
+
+		    if (existingFood == null) {
+		    	
+		        redirectAttributes.addAttribute("errorid", "No record present with Foodid: " + foodId);
+		        return "redirect:/admin/getAllfood";
+		    }
+		    
+		    else if (existingFood != null && ftmrepo.existsByFoodId(foodId))
+		    {
+    	
+		    	redirectAttributes.addAttribute("errorid-1", "First delete record in FoodTempMap Table with FoodMappingid: " + ftmrepo.findFoodTemperatureIdByFoodId(foodId));
+//		    	System.out.println("Yessssssss");
+		    	return "redirect:/admin/getAllfood";
+		    	
+		    }
+		    	
 		 
 		 adminService.deleteFoodService(foodId);
-		
-		 
+
 		 return "redirect:/admin/getAllfood";
 		 
 	 }
 	 
 	 @PostMapping("/addTempMap")
-	 public String addTempMap ( @ModelAttribute("ftempMapAdd") FoodTemperatureMap ftempMapAdd)
+	 public String addTempMap ( @ModelAttribute("ftempMapAdd") FoodTemperatureMap ftempMapAdd,  RedirectAttributes redirectAttributes)
 	 {
-		 ftmrepo.save(ftempMapAdd);
+		 Food existingFood = foodrepo.findByFoodId(ftempMapAdd.getFoodId());
+
+		    if (existingFood == null) {
+		    	
+		        redirectAttributes.addAttribute("error4", "No food item exist in Food Table with food-id: " + ftempMapAdd.getFoodId());
+		        return "redirect:/admin/getAllfood";
+		    }
 		 
+		 
+		 ftmrepo.save(ftempMapAdd);
 		 return "redirect:/admin/getAllfood";
 		 
 	 }

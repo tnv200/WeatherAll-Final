@@ -44,7 +44,7 @@ public class SecurityConfig {
 //	        	.requestMatchers("/admin/admin_dashboard/**").permitAll()
 //		        .requestMatchers("/user/static/**", "/user/static/js/**","/user/static/css/**").permitAll()	
 		        
-	        	.requestMatchers("/Homepage/**","/Signup/**","/Login/**").permitAll()
+	        	.requestMatchers("/Homepage/**","/Signup/**","/Login/**","/check-email").permitAll()
 	        		
 	        	
 	        	.requestMatchers("/admin/view_adminprofile","/admin/update_admin","/pages-profile").hasAuthority("admin")

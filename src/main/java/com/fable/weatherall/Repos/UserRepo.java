@@ -19,12 +19,18 @@ import jakarta.transaction.Transactional;
 @EnableJpaRepositories
 @Repository
 public interface UserRepo extends JpaRepository<User, Integer>{
+	
+	boolean existsByEmail(String email);
+	
+	User findUserByEmail(String email);
 
 	User findByEmail(String email);
 	//changes
 	User findByUsername(String username);
 	
 	User findByUserType(String usertype);
+	
+	 Optional<User> findOptionalByEmail(String email);
 
 	List<User> findAll();
 
@@ -34,6 +40,9 @@ public interface UserRepo extends JpaRepository<User, Integer>{
 	
 	 @Query("SELECT a.username FROM User a WHERE a.email = :email")
 	 String findUsernameByEmail(String email);
+	 
+	 @Query("SELECT a.email FROM User a WHERE a.id = :id")
+	 String findEmailById(int id);
 	 
 	 @Query("SELECT a.userid FROM User a WHERE a.email = :email")
 	 int findUseridByEmail(String email);
