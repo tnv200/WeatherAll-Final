@@ -11,4 +11,10 @@ public interface ClothItemRepo extends JpaRepository<ClothingItem, Integer>{
 	 List<ClothingItem> findAll(); 
 	 
 	 void deleteByClothingItemId(int a);
+	 
+	 ClothingItem findByItemName(String item);
+	 
+	 ClothingItem findByClothingItemId(int id);
+	 
+	
 }

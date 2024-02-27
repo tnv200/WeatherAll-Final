@@ -19,6 +19,8 @@ public interface FoodTempMapRepo extends JpaRepository<FoodTemperatureMap, Integ
 	
 	boolean existsByFoodId(int id);
 	
+	FoodTemperatureMap findByFoodTemperatureId(int tempid);
+	
 	@Query("SELECT ftm.foodTemperatureId FROM FoodTemperatureMap ftm WHERE ftm.foodId = :foodId")
     Integer findFoodTemperatureIdByFoodId(Integer foodId);
 	

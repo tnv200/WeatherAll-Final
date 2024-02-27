@@ -28,6 +28,15 @@ public interface ClothRepo extends JpaRepository<ClothingRecommendation, Integer
         String getItem_Id();
         String getType_Id();
     }
+	
+	@Query("SELECT cr.clothingRecommendationId "+" FROM ClothingRecommendation cr "+"JOIN cr.clothingItem ci " +"WHERE ci.clothingItemId = :clothingItemId")
+	Integer findClothingRecommendationIdByClothingItem_ClothingItemId(Integer clothingItemId);
+	
+	 @Query("SELECT CASE WHEN COUNT(cr) > 0 THEN true ELSE false END " +
+	            "FROM ClothingRecommendation cr " +
+	            "JOIN cr.clothingItem ci " +
+	            "WHERE ci.clothingItemId = :clothingItemId")
+	    boolean existsByClothingItemId(@Param("clothingItemId") int clothingItemId);
 
 	@Query("SELECT ci.itemName as itemName, ct.typeName as typeName	" +
 	       "FROM ClothingRecommendation cr " +
@@ -56,6 +65,8 @@ public interface ClothRepo extends JpaRepository<ClothingRecommendation, Integer
 	        return results;
 	        
 	  }
+	  
+	  ClothingRecommendation findByClothingRecommendationId(int id);
 	  
 	  void deleteByClothingRecommendationId(int a);
 	  

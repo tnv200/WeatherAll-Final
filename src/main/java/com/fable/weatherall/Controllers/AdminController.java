@@ -292,7 +292,17 @@ public class AdminController {
 	 }
 	 
 	 @PostMapping("/delTempMap")
-	 public String delTempMap(  @RequestParam("foodTemperatureId") int foodTemperatureId ) {
+	 public String delTempMap(  @RequestParam("foodTemperatureId") int foodTemperatureId, RedirectAttributes redirectAttributes ) {
+		 
+		 FoodTemperatureMap existingFood = ftmrepo.findByFoodTemperatureId(foodTemperatureId);
+
+		    if (existingFood == null) {
+		    	
+		        redirectAttributes.addAttribute("error5", "No record present with FoodMappingId: " + foodTemperatureId);
+		        return "redirect:/admin/getAllfood";
+		    }
+		    
+		   
 		 adminService.delTempMap(foodTemperatureId);
 		 
 		 return "redirect:/admin/getAllfood";
@@ -313,8 +323,18 @@ public class AdminController {
     }
 
 	 @PostMapping("/addClothItem")
-	 public String addClothItems ( @ModelAttribute("clothadd") ClothingItem clothadd)
+	 public String addClothItems ( @ModelAttribute("clothadd") ClothingItem clothadd, RedirectAttributes redirectAttributes)
 	 {
+		 
+		 ClothingItem existingcloth = cirepo.findByItemName(clothadd.getItemName());
+		// System.out.println("Yessssssssssss");
+
+		    if (existingcloth != null) {
+		    	
+		        redirectAttributes.addAttribute("error1", "Cloth item already exists with Clothid: " + existingcloth.getClothingItemId());
+		        return "redirect:/admin/getClothItems";
+		    }
+	     
 		 
 		 cirepo.save(clothadd);
 		 
@@ -323,8 +343,25 @@ public class AdminController {
 	 }
 	 
 	 @PostMapping("/delClothItem")
-	 public String delClothItem(   @RequestParam("clothingItemId") int clothingItemId) {
+	 public String delClothItem(   @RequestParam("clothingItemId") int clothingItemId, RedirectAttributes redirectAttributes) {
 		 
+		  ClothingItem existingcloth = cirepo.findByClothingItemId(clothingItemId);
+
+		  if (existingcloth == null) {
+		    	
+		        redirectAttributes.addAttribute("error2", "No record present with Clothid: " + clothingItemId);
+		        return "redirect:/admin/getClothItems";
+		    }
+		    
+		    else if (existingcloth != null && clothrepo.existsByClothingItemId(clothingItemId))
+		    {
+		    	
+		    	redirectAttributes.addAttribute("error3", "First delete record in ClothTempMap Table with ClothRecoId: " + clothrepo.findClothingRecommendationIdByClothingItem_ClothingItemId(clothingItemId));
+
+		    	return "redirect:/admin/getClothItems";
+		    	
+		    }
+
 		 adminService.delClothItem(clothingItemId);
 		 
 		 return "redirect:/admin/getClothItems";
@@ -334,8 +371,18 @@ public class AdminController {
 	 @PostMapping("/addClothReco")
 	 public String addClothReco ( @RequestParam("clothingItemId")int clothingItemId,
 			                      @RequestParam("clothingTypeId")int clothingTypeId,
-			                      @RequestParam("weatherDescriptionId")int weatherDescriptionId   )
+			                      @RequestParam("weatherDescriptionId")int weatherDescriptionId, RedirectAttributes redirectAttributes   )
 	 {
+		 
+
+		 ClothingItem existingcloth = cirepo.findByClothingItemId(clothingItemId);
+
+		    if (existingcloth == null) {
+		    	
+		        redirectAttributes.addAttribute("error4", "No Cloth item exist in Cloth Table with Cloth-id: " + clothingItemId);
+		        return "redirect:/admin/getClothItems";
+		    }
+		 
 		 
 		 Integer clothitem_id = Integer.valueOf(clothingItemId);
 		 Integer clothtype_id = Integer.valueOf(clothingTypeId);
@@ -369,7 +416,16 @@ public class AdminController {
 	 }
  
 	 @PostMapping("/delClothReco")
-	 public String delClothReco(  @RequestParam("clothingRecoId") int clothingRecoId) {
+	 public String delClothReco(  @RequestParam("clothingRecoId") int clothingRecoId, RedirectAttributes redirectAttributes) {
+		 
+		 ClothingRecommendation existingcloth = clothrepo.findByClothingRecommendationId(clothingRecoId);
+
+		    if (existingcloth == null) {
+		    	
+		        redirectAttributes.addAttribute("error5", "No record present with ClothRecommendationId: " + clothingRecoId);
+		        return "redirect:/admin/getClothItems";
+		    }
+		 
 		 
 		 adminService.delClothReco(clothingRecoId);
 		 
