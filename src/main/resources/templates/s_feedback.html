@@ -162,7 +162,7 @@
 	var nonSpaceCharactersCount = feedbackSuggestion.replace(/\s/g, '').length;
 
         // Check if the length of the feedback suggestion is at least 10 characters
-        if (feedbackSuggestion.length < 10) {
+        if (nonSpaceCharactersCount.length < 10) {
             alert('Please enter at least 10 characters for your suggestion.');
             return; // Prevent form submission
         }
