@@ -154,39 +154,43 @@
 
     <!-- Add any necessary JavaScript scripts here -->
     <script>
-        document.getElementById("send-feedback-btn").addEventListener("click", function () {
-            // Get the feedback suggestion from the textarea
-            var feedbackSuggestion = document.getElementById("feedback-suggestion").value;
+        
+         document.getElementById("send-feedback-btn").addEventListener("click", function () {
+        // Get the feedback suggestion from the textarea
+        var feedbackSuggestion = document.getElementById("feedback-suggestion").value;
 
-            // Make a POST request to /submit-feedback
-            fetch('/submit-feedback', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ suggestion: feedbackSuggestion }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                // Handle the response
-                console.log('Response:', data);
-                
-                // Show alert and redirect on success
-                if (data.success) {
-                    alert('Feedback sent!');
-                    window.location.href = '/user_dash';
-                } else {
-                    alert('Error submitting feedback. Please try again.');
-                }
-                
-                
-                
-                
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+        // Check if the length of the feedback suggestion is at least 10 characters
+        if (feedbackSuggestion.length < 10) {
+            alert('Please enter at least 10 characters for your suggestion.');
+            return; // Prevent form submission
+        }
+
+        // Make a POST request to /submit-feedback
+        fetch('/submit-feedback', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ suggestion: feedbackSuggestion }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Handle the response
+            console.log('Response:', data);
+            
+            // Show alert and redirect on success
+            if (data.success) {
+                alert('Feedback sent!');
+                window.location.href = '/user_dash';
+            } else {
+                alert('Error submitting feedback. Please try again.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
         });
+    });
+    
     </script>
 
 </body>
