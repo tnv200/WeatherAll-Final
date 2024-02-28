@@ -183,50 +183,86 @@ public class UserService {
         return userRepo.findAll();
     }
 
+//    public LoginResponse loginUser(LoginDTO loginDTO) {
+//        User user1 = userRepo.findByEmail(loginDTO.getEmail());
+//        if (user1 != null && user1.getUserType().equals("user")) {
+//            String password = loginDTO.getPassword();
+//            String encodedPassword = user1.getPassword();
+//            Boolean isPwdRight = passwordEncoder.matches(password, encodedPassword);
+//            if (isPwdRight) {
+//                Optional<User> user = userRepo.findOneByEmailAndPassword(loginDTO.getEmail(), encodedPassword);
+//                if (user.isPresent()) {
+//                    return new LoginResponse("Login Success", true); // Fixed syntax
+//                } else {
+//                    return new LoginResponse("Login Failed", false);
+//                }
+//            } else {
+//                return new LoginResponse("Password Not Match", false); // Fixed typo
+//            }
+//        } else {
+//            return new LoginResponse("Email not exists", false);
+//        }
+//        
+//    }
     public LoginResponse loginUser(LoginDTO loginDTO) {
-        User user1 = userRepo.findByEmail(loginDTO.getEmail());
-        if (user1 != null && user1.getUserType().equals("user")) {
-            String password = loginDTO.getPassword();
-            String encodedPassword = user1.getPassword();
-            Boolean isPwdRight = passwordEncoder.matches(password, encodedPassword);
-            if (isPwdRight) {
-                Optional<User> user = userRepo.findOneByEmailAndPassword(loginDTO.getEmail(), encodedPassword);
-                if (user.isPresent()) {
-                    return new LoginResponse("Login Success", true); // Fixed syntax
-                } else {
-                    return new LoginResponse("Login Failed", false);
-                }
-            } else {
-                return new LoginResponse("Password Not Match", false); // Fixed typo
-            }
-        } else {
+        
+
+        User user = userRepo.findByEmail(loginDTO.getEmail());
+        if (user == null) {
+            // User not found
             return new LoginResponse("Email not exists", false);
         }
-        
+        if (user != null && passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
+            String userType = user.getUserType();
+            if (userType != null && userType.equals("admin")) {
+                
+                return new LoginResponse("Login Success (Admin)", true);
+            } else if (userType != null && userType.equals("user")) {
+                
+                return new LoginResponse("Login Success (User)", true);
+            } else {
+                
+                return new LoginResponse("Login Success", true);
+            }
+        } else {
+            return new LoginResponse("Password Not Match", false);
+        }
     }
     
     
+//    public LoginResponse loginAdmin(User user) {
+//		User user2 = userRepo.findByEmail(user.getEmail());
+//        if (user2 != null && user2.getUserType().equals("admin")) {
+//            String password = user.getPassword();
+//            String encodedPassword = user2.getPassword();
+////            System.out.println(password);
+//            Boolean isPwdRight = passwordEncoder.matches(password, encodedPassword);
+//            if (isPwdRight) {
+//                Optional<User> adm = userRepo.findOneByEmailAndPassword(user.getEmail(), encodedPassword);
+//                if (adm.isPresent()){
+//                    return new LoginResponse("Login Success", true); // Fixed syntax
+//                } else {
+//                    return new LoginResponse("Login Failed", false);
+//                }
+//            } else {
+//                return new LoginResponse("Password Not Match", false); // Fixed typo
+//            }
+//        } else {
+//            return new LoginResponse("Email not exists", false);
+//        }
+//	}
     public LoginResponse loginAdmin(User user) {
-		User user2 = userRepo.findByEmail(user.getEmail());
-        if (user2 != null && user2.getUserType().equals("admin")) {
-            String password = user.getPassword();
-            String encodedPassword = user2.getPassword();
-//            System.out.println(password);
-            Boolean isPwdRight = passwordEncoder.matches(password, encodedPassword);
-            if (isPwdRight) {
-                Optional<User> adm = userRepo.findOneByEmailAndPassword(user.getEmail(), encodedPassword);
-                if (adm.isPresent()){
-                    return new LoginResponse("Login Success", true); // Fixed syntax
-                } else {
-                    return new LoginResponse("Login Failed", false);
-                }
-            } else {
-                return new LoginResponse("Password Not Match", false); // Fixed typo
-            }
-        } else {
-            return new LoginResponse("Email not exists", false);
+        User existingUser = userRepo.findByEmail(user.getEmail());
+
+         if (existingUser == null) {
+           return new LoginResponse("Email not exists", false);
         }
-	}
+       if ("admin".equals(existingUser.getUserType()) && passwordEncoder.matches(user.getPassword(), existingUser.getPassword())) {
+             return new LoginResponse("Login Success", true);
+         } else {
+           return new LoginResponse("Login Failed. Email not exists or not an admin, or Password Not Match", false);
+         }
+     }
     
     @Transactional
     public void deleteUserById(int userId) {

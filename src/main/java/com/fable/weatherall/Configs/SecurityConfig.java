@@ -52,20 +52,20 @@ public class SecurityConfig {
         	
 	            .requestMatchers("/user_dash","/admin/api/wapiobj").hasAuthority("user")
 	            
-	            .requestMatchers("/home","/admin/api/view","/admin/api/config","/admin/api/wapiobj","/admin/api/wview","/comlogin","/forgetPassword","/signup","/about","/submit-feedback").permitAll() 
+	            .requestMatchers("/home","/admin/api/view","/admin/api/config","/admin/api/wapiobj","/admin/api/wview","/comloginn","/forgetPasswordd","/signupp","/aboutt","/aboutt1","/submit-feedback").permitAll() 
 	            .requestMatchers("/checkEmailExists/**","/sendOtp/**","/admin/registerAdmin","/save","/verify-otp","/saveEmailAndOTP","/resetPassword").permitAll()
 	            // .requestMatchers("/viewProfileDetail").hasAuthority("ADMIN")  // Allow admins to access viewProfileDetail
 	            //.requestMatchers("/admin/static/**").permitAll()  // Allow access to static resources under /admin/static/**
 	            .anyRequest().authenticated())  // Require authentication for all other requests
 
 	        .formLogin(form -> form
-	            .loginPage("/comlogin").loginProcessingUrl("/comlogin")
+	            .loginPage("/comloginn").loginProcessingUrl("/comloginn")
 	            .successHandler(new CustomSuccessHandler()).permitAll())
 
 	        .logout(form -> form
 	            .invalidateHttpSession(true).clearAuthentication(true)
 	            .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-	            .logoutSuccessUrl("/comlogin").permitAll());
+	            .logoutSuccessUrl("/comloginn").permitAll());
 	    
 	    return http.build();
 	}

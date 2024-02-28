@@ -51,12 +51,12 @@ public class Weather_Home_Controller {
         return "Homepage";
     }
 	
-	@GetMapping("/comlogin")
+	@GetMapping("/comloginn")
 	public String displayLogin() {
         return "comlogin";
     }
 	
-	@GetMapping("/signup")
+	@GetMapping("/signupp")
 	public String displaySignup() {
         return "signup";
     }
@@ -66,17 +66,21 @@ public class Weather_Home_Controller {
         return "user";
     }
 	
-	@GetMapping("/map-google")
+	@GetMapping("/map-googlee")
 	public String displayMap() {
         return "map-google";
     }
 	
-	@GetMapping("/about")
+	@GetMapping("/aboutt")
 	public String displayAboutPage() {
         return "about";
     }
+	@GetMapping("/aboutt1")
+	public String displayAboutPage1() {
+        return "about1";
+    }
 	
-	@GetMapping("/forgetPassword")
+	@GetMapping("/forgetPasswordd")
 	public String forgetPassword() {
         return "forgetPassword";
     }

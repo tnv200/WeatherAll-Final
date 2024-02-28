@@ -181,48 +181,64 @@ public class AdminService {
     }
     
     
-    public void update_ApiKeyUrl(ApiKeyUrl apikeyurl) {
-    	
-    	ApiKeyUrl apikeyurl_in = apikeyurlrepo.findById(1);
-    	
-//    	ApiKeyUrl apikeyurl_in = new ApiKeyUrl();
+//    public void update_ApiKeyUrl(ApiKeyUrl apikeyurl) {
+//    	
+//    	ApiKeyUrl apikeyurl_in = apikeyurlrepo.findById(1);
+//    	
+////    	ApiKeyUrl apikeyurl_in = new ApiKeyUrl();
+////    	apikeyurl_in.setApikey(apikeyurl.getApikey());
+////    	apikeyurl_in.setApiurl(apikeyurl.getApiurl());
+//    	
 //    	apikeyurl_in.setApikey(apikeyurl.getApikey());
 //    	apikeyurl_in.setApiurl(apikeyurl.getApiurl());
+//
+//    	apikeyurlrepo.save(apikeyurl_in);
+        
+//
+//        return user.getUsername();
+   // }
+    
+//    public Map<String, String> getWapiKeyUrl()
+//    {
+//    	 WeatherApi a= wapirepo.findById(1);
+//    	
+//    	
+//    	 Map<String, String> api = new HashMap<>();
+//	       
+//    	 api.put("wapiKey", a.getWapikey());
+//	       
+//    	 api.put("wapiUrl", a.getWapiurl());
+//	        
+//
+//    	return api;
+//    }
+    public Map<String, String> getWapiKeyUrl() {
+        Optional<WeatherApi> optionalWeatherApi = wapirepo.findById(1);
+
+        Map<String, String> api = new HashMap<>();
+
+        optionalWeatherApi.ifPresent(a -> {
+            api.put("wapiKey", a.getWapikey());
+            api.put("wapiUrl", a.getWapiurl());
+        });
+
+        // You can add default values or additional handling if needed
+
+        return api;
+    }
+    
+ public void update_ApiKeyUrl(ApiKeyUrl apikeyurl) {
+    	
+    	ApiKeyUrl apikeyurl_in = apikeyurlrepo.findById(1);
     	
     	apikeyurl_in.setApikey(apikeyurl.getApikey());
     	apikeyurl_in.setApiurl(apikeyurl.getApiurl());
 
     	apikeyurlrepo.save(apikeyurl_in);
         
-//
-//        return user.getUsername();
     }
     
-    public Map<String, String> getWapiKeyUrl()
-    {
-    	 WeatherApi a= wapirepo.findById(1);
-    	
-    	
-    	 Map<String, String> api = new HashMap<>();
-	       
-    	 api.put("wapiKey", a.getWapikey());
-	       
-    	 api.put("wapiUrl", a.getWapiurl());
-	        
-
-    	return api;
-    }
-    
-     public void update_WapiKeyUrl(WeatherApi wapikeyurl) {
-    	
-    	 WeatherApi wapikeyurl_in = wapirepo.findById(1);
-    	
-    	wapikeyurl_in.setWapikey(wapikeyurl.getWapikey());
-    	wapikeyurl_in.setWapiurl(wapikeyurl.getWapiurl());
-
-    	wapirepo.save(wapikeyurl_in);
-
-     }
+   
     
     public void update_Admin(User user) {
     	
@@ -234,7 +250,17 @@ public class AdminService {
     	userrepo.save(user1);
 
     }
-    
+    public void update_WapiKeyUrl(WeatherApi updatedWapikeyurl) {
+        Optional<WeatherApi> optionalWapikeyurl = wapirepo.findById(1);
+
+        optionalWapikeyurl.ifPresent(existingWapikeyurl -> {
+            // Extract the WeatherApi object from Optional
+            existingWapikeyurl.setWapikey(updatedWapikeyurl.getWapikey());
+            existingWapikeyurl.setWapiurl(updatedWapikeyurl.getWapiurl());
+
+            wapirepo.save(existingWapikeyurl);
+        });
+    }
     
     
     
