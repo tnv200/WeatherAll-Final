@@ -12,7 +12,7 @@ public class TravelNames {
     private Integer travelid;
     
     @Column(name = "Travelname", nullable = false)
-    private String Travelname;
+    private String travelname;
 
 	
 
@@ -25,11 +25,12 @@ public class TravelNames {
 	}
 
 	public String getTravelname() {
-		return Travelname;
+		return travelname;
 	}
 
 	public void setTravelname(String travelname) {
-		Travelname = travelname;
+		this.travelname = travelname;
 	}
+
 	
 }

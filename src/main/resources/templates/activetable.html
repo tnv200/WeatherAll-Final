@@ -704,6 +704,42 @@ span.close1 {
     });
 </script>
 
+
+<script>
+    function displayErrorMessages() {
+        var urlParams = new URLSearchParams(window.location.search);
+        
+        var errorMessage = urlParams.get('error1');
+        if (errorMessage) {
+            alert(decodeURIComponent(errorMessage));
+        }
+        
+        var errorMessage1 = urlParams.get('error2');
+        if (errorMessage1) {
+            alert(decodeURIComponent(errorMessage1));
+        }
+        
+        var errorMessage2 = urlParams.get('error3');
+        if (errorMessage2) {
+            alert(decodeURIComponent(errorMessage2));
+        }
+        
+         var errorMessage3 = urlParams.get('error4');
+        if (errorMessage3) {
+            alert(decodeURIComponent(errorMessage3));
+        }
+        
+         var errorMessage4 = urlParams.get('error5');
+        if (errorMessage4) {
+            alert(decodeURIComponent(errorMessage4));
+        }
+    }
+
+    // Call the function when the page loads
+    window.onload = displayErrorMessages;
+</script>
+
+
 </body>
 
 </html>

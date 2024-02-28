@@ -447,16 +447,42 @@ public class AdminController {
      }
 	 
 	 @PostMapping("/addOutActs")
-	 public String addOutActs ( @ModelAttribute("actname")Activity actname)
+	 public String addOutActs ( @ModelAttribute("actname")Activity actname, RedirectAttributes redirectAttributes)
 	 {
 
+		 Activity existingout = outactrepo.findByActivityname(actname.getActivityname());
+		// System.out.println("Yessssssssssss");
+
+		    if (existingout != null) {
+		    	
+		        redirectAttributes.addAttribute("error1", "Activity name already exists with Activityid: " + existingout.getActivityid());
+		        return "redirect:/admin/getOutActs";
+		    }
+		 
 		 outactrepo.save(actname);
 		 return "redirect:/admin/getOutActs";
 		 
 	 }
 	 
 	 @PostMapping("/delOutActs")
-	 public String delOutActs(  @RequestParam("activityid") int activityid ) {
+	 public String delOutActs(  @RequestParam("activityid") int activityid, RedirectAttributes redirectAttributes ) {
+		 
+		 Activity existingout = outactrepo.findByActivityid(activityid);
+
+		  if (existingout == null) {
+		    	
+		        redirectAttributes.addAttribute("error2", "No record present with Activityid: " + activityid);
+		        return "redirect:/admin/getOutActs";
+		    }
+		    
+		    else if (existingout != null && outrepo.existsByActivityid(activityid))
+		    {
+		    	
+		    	redirectAttributes.addAttribute("error3", "First delete record in Activity Mapping Table with ActivityRecoid: " + outrepo.findActivityRecommendationidByActivity_Activityid(activityid));
+
+		    	return "redirect:/admin/getOutActs";
+		    	
+		    }
 
 		 
 		 adminService.delOutActs(activityid);
@@ -466,8 +492,18 @@ public class AdminController {
 	 @PostMapping("/addOutReco")
 	 public String addOutReco (   @RequestParam("activityid")int activityid,
 			                    @RequestParam("recommendationLevelId")int recommendationLevelId,
-			                    @RequestParam("weatherDescriptionId")int weatherDescriptionId  )
+			                    @RequestParam("weatherDescriptionId")int weatherDescriptionId, RedirectAttributes redirectAttributes   )
 	 {
+
+		 Activity existingout = outactrepo.findByActivityid(activityid);
+
+		    if (existingout == null) {
+		    	
+		        redirectAttributes.addAttribute("error4", "No Activity name exist in Activities Table with Activity-id: " + activityid);
+		        return "redirect:/admin/getOutActs";
+		    }
+		 
+		 
 		 Integer activity_id = Integer.valueOf(activityid);
 		 Integer level_id = Integer.valueOf(recommendationLevelId);
 		 Integer wthr_id = Integer.valueOf(weatherDescriptionId);
@@ -498,7 +534,16 @@ public class AdminController {
 	 }
 	 
 	 @PostMapping("/delOutReco")
-	 public String delOutReco(  @RequestParam("outreid") int outreid ) {
+	 public String delOutReco(  @RequestParam("outreid") int outreid, RedirectAttributes redirectAttributes  ) {
+		 
+		 ActivityRecommendation existingout = outrepo.findByActivityRecommendationid(outreid);
+
+		    if (existingout == null) {
+		    	
+		        redirectAttributes.addAttribute("error5", "No record present with ActivityRecommendationId: " + outreid);
+		        return "redirect:/admin/getOutActs";
+		    }
+		 
 		 
 		 adminService.delOutReco(outreid);
 		 return "redirect:/admin/getOutActs";
@@ -518,8 +563,18 @@ public class AdminController {
      }
 	 
 	 @PostMapping("/addTrNms")
-	 public String addTrNms ( @ModelAttribute("traname")TravelNames trnms)
+	 public String addTrNms ( @ModelAttribute("traname")TravelNames trnms, RedirectAttributes redirectAttributes )
 	 {
+		 
+		 TravelNames existingtra = trnmrepo.findByTravelname(trnms.getTravelname());
+			// System.out.println("Yessssssssssss");
+
+			    if (existingtra != null) {
+			    	
+			        redirectAttributes.addAttribute("error1", "Travel name already exists with Travelid: " + existingtra.getTravelid());
+			        return "redirect:/admin/getTrNms";
+			    }
+		 
 		 trnmrepo.save(trnms);
 		 
 		 return "redirect:/admin/getTrNms";
@@ -527,7 +582,25 @@ public class AdminController {
 	 }
 	 
 	 @PostMapping("/delTrNms")
-	 public String delTrNms(@RequestParam("travelid") int travelid ) {
+	 public String delTrNms(@RequestParam("travelid") int travelid, RedirectAttributes redirectAttributes ) {
+		 
+		 TravelNames existingtra = trnmrepo.findByTravelid(travelid);
+
+		  if (existingtra == null) {
+		    	
+		        redirectAttributes.addAttribute("error2", "No record present with Travelid: " + travelid);
+		        return "redirect:/admin/getTrNms";
+		    }
+		    
+		    else if (existingtra != null && travelrepo.existsByTravelid(travelid))
+		    {
+		    	
+		    	redirectAttributes.addAttribute("error3", "First delete record in Activity Mapping Table with ActivityRecoid: " + travelrepo.findTravelRecommendationidByTravelnames_Travelid(travelid));
+
+		    	return "redirect:/admin/getTrNms";
+		    	
+		    }
+
 
 		 adminService.delTrNms(travelid);
 		 return "redirect:/admin/getTrNms";
@@ -537,8 +610,17 @@ public class AdminController {
 	 @PostMapping("/addTraReco")
 	 public String addTraReco ( @RequestParam("travelid")int travelid,
 			                   @RequestParam("recommendationLevelId")int recommendationLevelId,
-			                   @RequestParam("weatherDescriptionId")int weatherDescriptionId  )
+			                   @RequestParam("weatherDescriptionId")int weatherDescriptionId, RedirectAttributes redirectAttributes  )
 	 {
+		 TravelNames existingtra = trnmrepo.findByTravelid(travelid);
+
+		    if (existingtra == null) {
+		    	
+		        redirectAttributes.addAttribute("error4", "No Travel name exists in Travel names Table with Travel-id: " + travelid);
+		        return "redirect:/admin/getTrNms";
+		    }
+		 
+		 
 		 Integer travel_id = Integer.valueOf(travelid);
 		 Integer level_id = Integer.valueOf(recommendationLevelId);
 		 Integer wthr_id = Integer.valueOf(weatherDescriptionId);
@@ -571,7 +653,15 @@ public class AdminController {
 	 }
 	 
 	 @PostMapping("/delTraReco")
-	 public String delTraReco(  @RequestParam("outreid") int outreid ) {
+	 public String delTraReco(  @RequestParam("outreid") int outreid, RedirectAttributes redirectAttributes ) {
+		 
+		 TravelRecommendation existingout = travelrepo.findByTravelRecommendationid(outreid);
+
+		    if (existingout == null) {
+		    	
+		        redirectAttributes.addAttribute("error5", "No record present with TravelRecommendationId: " + outreid);
+		        return "redirect:/admin/getTrNms";
+		    }
 		 
 		 adminService.delTraReco(outreid);
 		 

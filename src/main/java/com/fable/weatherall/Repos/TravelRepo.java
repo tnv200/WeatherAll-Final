@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.fable.weatherall.OutEntities.ActivityRecommendation;
 import com.fable.weatherall.Repos.OutRepo.ActivityRecommendationDetailsProjection;
 import com.fable.weatherall.TravelEntities.TravelRecommendation;
 
@@ -26,9 +27,19 @@ public interface TravelRepo extends JpaRepository<TravelRecommendation, Integer>
         String getTrvlname_Id();
         String getLevel_Id();
     }
+    
+    
+    
+    @Query("SELECT tr.travelRecommendationid "+"FROM TravelRecommendation tr " + "JOIN tr.travelnames tn "  + "WHERE tn.travelid = :travelid")
+   	Integer findTravelRecommendationidByTravelnames_Travelid(Integer travelid);
 
+    @Query("SELECT CASE WHEN COUNT(tr) > 0 THEN true ELSE false END " +
+            "FROM TravelRecommendation tr " +
+            "JOIN tr.travelnames tn " +
+            "WHERE tn.travelid = :travelid")
+    boolean existsByTravelid(@Param("travelid") int travelid);
 
-    @Query("SELECT tn.Travelname as travelname, rlo.level as level " +
+    @Query("SELECT tn.travelname as travelname, rlo.level as level " +
            "FROM TravelRecommendation tr " +
            "JOIN tr.travelnames tn " +
            "JOIN tr.recommendationLevel rlo " +
@@ -52,6 +63,8 @@ public interface TravelRepo extends JpaRepository<TravelRecommendation, Integer>
      return results;
      
     }
+    
+      TravelRecommendation findByTravelRecommendationid(int id);
     
       void  deleteByTravelRecommendationid(int a);
 

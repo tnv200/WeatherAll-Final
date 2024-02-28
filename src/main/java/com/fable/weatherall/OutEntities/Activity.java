@@ -17,7 +17,7 @@ public class Activity {
 	    private Integer activityid;
 	    
 	    @Column(name = "Activityname", nullable = false)
-	    private String Activityname;
+	    private String activityname;
 
 		public Integer getActivityid() {
 			return activityid;
@@ -28,12 +28,17 @@ public class Activity {
 		}
 
 		public String getActivityname() {
-			return Activityname;
+			return activityname;
 		}
 
 		public void setActivityname(String activityname) {
-			Activityname = activityname;
+			this.activityname = activityname;
 		}
+
+		
+
+		
+		
 
 		
 

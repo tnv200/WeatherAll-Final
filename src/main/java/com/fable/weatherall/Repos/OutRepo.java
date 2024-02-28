@@ -5,12 +5,16 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
+import com.fable.weatherall.ClothEntites.ClothingRecommendation;
 import com.fable.weatherall.OutEntities.ActivityRecommendation;
 
 
-
+@EnableJpaRepositories
+@Repository
 public interface OutRepo extends JpaRepository<ActivityRecommendation, Integer> {
 	
 	public interface ActivityRecommendationProjection {
@@ -26,8 +30,19 @@ public interface OutRepo extends JpaRepository<ActivityRecommendation, Integer> 
         String getActivity_Id();
         String getLevel_Id();
     }
+    
+    @Query("SELECT ar.activityRecommendationid "+"FROM ActivityRecommendation ar " + "JOIN ar.activity a " +"WHERE a.activityid = :activityid")
+	Integer findActivityRecommendationidByActivity_Activityid(Integer activityid);
+    
+    
+    @Query("SELECT CASE WHEN COUNT(ar) > 0 THEN true ELSE false END " +
+            "FROM ActivityRecommendation ar " +
+            "JOIN ar.activity a " +
+            "WHERE a.activityid = :activityid")
+    boolean existsByActivityid(@Param("activityid") int activityid);
+
 	
-    @Query("SELECT a.Activityname as activityname, rlo.level as level " +
+    @Query("SELECT a.activityname as activityname, rlo.level as level " +
            "FROM ActivityRecommendation ar " +
            "JOIN ar.activity a " +
            "JOIN ar.recommendationLevel rlo " +
@@ -52,6 +67,7 @@ public interface OutRepo extends JpaRepository<ActivityRecommendation, Integer> 
         return results;
     }
 	  
+       ActivityRecommendation findByActivityRecommendationid(int id);
        
        void deleteByActivityRecommendationid(int a);
 
